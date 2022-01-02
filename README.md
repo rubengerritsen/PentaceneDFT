@@ -16,6 +16,9 @@ In this way you get a "sheet" of kpoints along the K-path specified and from
 this we obtain the projected density of states. Which happens with some analysis
 scripts.
 
+### Vaccuum energies
+There is also a folder in `NumericalExperiments` named `vaccuum_energies` with the data to create the potential graphs to align the vaccuum energies. Under `Analysis` you can find a script `energy_shifts.py` that will plot all of them aligned. 
+
 ## The Analysis
 In the folder `Analysis` I have collected some python scripts that help you with
 converting the data to pictures. It is probably best to just run them and you can see what they will do. There are comments in the python files that explain what happens when.
