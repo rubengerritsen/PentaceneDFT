@@ -18,7 +18,7 @@ scripts.
 
 ## The Analysis
 In the folder `Analysis` I have collected some python scripts that help you with
-converting the data to pictures. For explanation see the comments in the files.
+converting the data to pictures. It is probably best to just run them and you can see what they will do. There are comments in the python files that explain what happens when.
 
 ## Raw Data
 In the folder `RawData` is the data from the arres measurements used to make the
