@@ -1,0 +1,8 @@
+Each of the ARRES images in the powerpoint is composed of three linecuts in the reciprocal space. The data of the linecuts can be found in the text files. 
+The data is 2D. Each row corresponds to a certain energy, the columns correspond to intensities along the linecut at the corresponding energy.
+The number of rows in the ARRES linecuts is 281, corresponding to energies in the range (-3,25) eV, with 0.1 eV increments.
+The precise energies corresponding to the rows in the linecut texts can be found in ARRES_energies.npy
+
+The last slide in the powerpoint is an IV curve of the (0,0) diffraction peak. It corresponds to a linecut in the ARRES images at the Gamma point.
+This IV-curve, however, has somewhat more details than a linecut at Gamma point would give. But the shape of the curves is basically the same.
+IV_energies.npy and IV_intensities.npy contain the data of the IV plot.
