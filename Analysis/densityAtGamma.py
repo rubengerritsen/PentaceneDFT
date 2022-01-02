@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 
+
 def energiesToDensity(energy_range: np.ndarray,
                       allEnergiesAtKPoint: np.ndarray,
                       resolution: int = 100,
@@ -14,15 +15,15 @@ def energiesToDensity(energy_range: np.ndarray,
     convolvedValues = 1.0 / (np.sqrt(2 * np.pi * np.power(sigma, 2))) * np.exp(
         -np.power(diff, 2) / (2 * np.power(sigma, 2)))
     res = np.sum(convolvedValues, axis=0)
-    #res = res / np.linalg.norm(res) # normalize if required
     return res
 
 
-bulk = np.loadtxt("../numexp/pent_bulk_new/res_29.dat")
-layer1 = np.loadtxt("../numexp/pent_1layer/res_29.dat")
-layer2 = np.loadtxt("../numexp/pent_2layer/res_29.dat")
-layer3 = np.loadtxt("../numexp/pent_3layer/res_29.dat")
-layer4 = np.loadtxt("../numexp/pent_4layer/res_29.dat")
+# point 29 is the gamma point
+bulk = np.loadtxt("../NumericalExperiments/pent_bulk/res_29.dat")
+layer1 = np.loadtxt("../NumericalExperiments/pent_1layer/res_29.dat")
+layer2 = np.loadtxt("../NumericalExperiments/pent_2layer/res_29.dat")
+layer3 = np.loadtxt("../NumericalExperiments/pent_3layer/res_29.dat")
+layer4 = np.loadtxt("../NumericalExperiments/pent_4layer/res_29.dat")
 
 energy_range = np.array([-10, 20])
 res = 300
@@ -54,7 +55,7 @@ bulk_y = energiesToDensity(energy_range,
                            sigma=0.3)
 fig, ax = plt.subplots(figsize=(10, 6))
 
-# offset is used to shift densities relative to eachother for better comparison
+# offset is used to shift densities relative to eachother so they no longer overlap
 offset = 0
 ax.plot(x, layer1_y / 2 + 0 * offset, ls=':', lw=2, label="1layer")
 ax.plot(x, layer2_y / 2 + 1 * offset, ls=':', lw=2, label="2layer")
@@ -64,19 +65,20 @@ ax.plot(x, bulk_y + 4 * offset, ls='--', lw=2, label="bulk")
 ax.legend()
 fig.show()
 
-
 plotname = "densitiesAtGamma.pdf"
 plt.savefig(plotname, dpi=150)
 os.system(f"pdfcrop --margin 5 {plotname} {plotname}")
 
-# %%
+# %% Compare the measured cut to some calculation (in this case the 1 layer calculation)
+fig, ax = plt.subplots(figsize=(10, 6))
 
 
 iv_energies = np.load("../RawData/IV_energies.npy")
 iv_intensities = np.load("../RawData/IV_intensities.npy")
+ax.plot(x, layer1_y / 2, ls=':', lw=2, label="1layer")
 ax2 = ax.twinx()
 ax2.plot(iv_energies,
-         -(np.log(iv_intensities) + np.exp(0.001 * iv_energies)),
+         -np.log(iv_intensities) - 0.45*iv_energies,
          ls='--',
          lw=1,
          marker='s',
@@ -85,17 +87,7 @@ ax2.plot(iv_energies,
          label="IV curve")
 ax2.set_xlim(energy_range)
 ax2.legend(loc='upper left')
-plotname = f"results/densityAtGamma_tmp.pdf"
-plt.savefig(plotname, dpi=150)
-os.system(f"pdfcrop --margin 5 {plotname} {plotname}")
-
-fig2, ax2 = plt.subplots(figsize=(10, 6))
-ax2.scatter(normal, gw)
-ax2.set_xlabel("DFT")
-ax2.set_ylabel("GW")
-ax2.plot(ax2.get_xlim(), ax2.get_ylim(), ls="--", c=".3")
-plotname = "GWvsDFT_val.pdf"
-plotname = "results/" + plotname
+plotname = f"densityAtGamma_tmp.pdf"
 plt.savefig(plotname, dpi=150)
 os.system(f"pdfcrop --margin 5 {plotname} {plotname}")
 
