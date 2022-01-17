@@ -73,3 +73,10 @@ In that folder you will find a script `run_parallel` does the GW calculation on 
 Finally we interpolate the bands with `ypp`, this is a terrible tool that can only interpolate so many bands at a time. To interpolate all the bands I have a python script (very poorly written, but functioning) `GW/Scripts/interpolateBands.py`. On the server it is called `interpolateBands.py` as well. 
 
 After running that all the bands are in `bands.out` and we can post process them to make "heat map" images. 
+
+## To keep in mind
+My calculations crashed often because I was out of memory. YAMBO's memory usage scales linearly with the number of processes used, so I found it easiest to just reduce that, 14 threads on cube1 worked for me.
+
+## Making the picture
+
+There is a python file `Scripts/dataToImage.py` that shows you how to convert the data to a heat map picture.
