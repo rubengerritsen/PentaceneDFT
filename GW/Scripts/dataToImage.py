@@ -29,7 +29,7 @@ def energiesToDensity(energy_range: np.ndarray,
     return res
 
 energy_range = np.array([0, 12])
-energyShift = -6.2  # manual shift for the GW calculation
+energyShift = -6.6  # manual shift for the GW calculation
 
 fig, ax = plt.subplots(1, 3, figsize=(21, 7.5))
 results = []
@@ -130,7 +130,7 @@ def visualizeNumExp(ax,
                     basename: str,
                     shift: float,
                     addBar: bool = False,
-                    sigma: float = 0.1,
+                    sigma: float = 0.05,
                     Ef: float = None) -> None:
     """ Visualize the data from the numerical experiments as a imshow graphic.
 
