@@ -7,14 +7,24 @@ from matplotlib.colors import LogNorm
 
 # I mount my cube1 home folder on remotes/cube1, for this to work you need to
 # provide your own path
-pathToFiles = "/home/ruben/remotes/cube1/pent_yambo/bands/bands.out/"
-data = np.loadtxt(pathToFiles + f"o.bands_interpolated")[:, 1:-3]
+pathToFiles = "/Users/bbaumeie/work/PentaceneDFT/GW/bands_DFT.out/"
+data_DFT = np.loadtxt(pathToFiles + f"o.bands_interpolated")[:, 1:-3]
 for i in range(1, 260):
     if i == 99:  # yeah weird, but I think this one is corrupted or something, so I skip it
         continue
-    data = np.concatenate([data,
+    data_DFT = np.concatenate([data_DFT,
         np.loadtxt(pathToFiles + f"o.bands_interpolated_{i:02d}")[:, 1:-3]
     ], axis=1)
+
+
+pathToFiles = "/Users/bbaumeie/work/PentaceneDFT/GW/bands_GW.out/"
+data_GW = np.loadtxt(pathToFiles + f"o.bands_interpolated")[:, 1:-3]
+for i in range(1, 260):
+    if i == 99:  # yeah weird, but I think this one is corrupted or something, so I skip it
+        continue
+    data_GW = np.concatenate([data_GW,
+        np.loadtxt(pathToFiles + f"o.bands_interpolated_{i:02d}")[:, 1:-3]
+    ], axis=1)    
 
 def energiesToDensity(energy_range: np.ndarray,
                       allEnergiesAtKPoint: np.ndarray,
@@ -29,27 +39,30 @@ def energiesToDensity(energy_range: np.ndarray,
     return res
 
 energy_range = np.array([0, 12])
-energyShift = -6.6  # manual shift for the GW calculation
+# after Yambo, the interpolated bands are energy shifted such that 
+# EFermi is in the middle of the Gap.
+energyShift = -3.5  # manual shift for the DFT calculation = -Work function
+
 
 fig, ax = plt.subplots(1, 3, figsize=(21, 7.5))
 results = []
 for i in range(61):
     yval = energiesToDensity(energy_range,
-                              data[i,:] + energyShift,
+                              data_DFT[i,:] + energyShift,
                               sigma=0.2,
                               resolution=100)
     results.append(yval)
 
 results = np.array(results).transpose()
 
-c = ax[1].imshow(-np.power(results,1),
+c = ax[0].imshow(-np.power(results,1),
               cmap="viridis",
               extent=[0, 1, energy_range[0], energy_range[1]],
               aspect="auto",
               interpolation="bilinear",
               origin="lower")
-ax[1].set_ylabel("Energy (eV)")
-ax[1].set_title("Yambo Bands")
+ax[0].set_ylabel("Energy (eV)")
+ax[0].set_title("DFT")
 
 # Experimental data, this comes from the RawData folder of the repo
 
@@ -99,67 +112,37 @@ tick_loc = np.concatenate([[0], np.cumsum(symmPoints1)]) / np.sum(symmPoints1)
 # CREATE REFERENCE PLOT, 1 LAYER ARRES
 arres1 = arres1 / np.max(arres1)
 visualizeARRES(fig,
-            ax[0],
+            ax[1],
             arres1,
             x_labels=['R', 'G', 'V'],
             label_loc=tick_loc,
             cmap='viridis',
             addBar=False)
-ax[0].set_ylim([energy_range[0], energy_range[1]])
+ax[1].set_ylim([energy_range[0], energy_range[1]])
 
 
-# And a reference dft calculation
-energyShift = -9.869  # The shift we determined from vaccuum levels
-def processDFT(orderedFileList: list,
-               energy_range: np.ndarray,
-               convFactor: float = 13.6,
-               shift: float = 0.0,
-               resolution=100,
-               sigma=0.1) -> np.ndarray:
-    """ processes the res_<nr> output files. """
-    results = []
-    for file in orderedFileList:
-        data = np.loadtxt(file)
-        energies = convFactor * data[:, 1] + shift
-        yval = energiesToDensity(energy_range, energies, resolution, sigma)
-        results.append(yval)
-    return np.array(results).transpose()
+# And a reference GW calculation
+# after Yambo, the interpolated bands are energy shifted such that 
+# EFermi is in the middle of the Gap.
+energyShift = -3.87  # manual shift for the GW calculation = -Work function + shifted Efermi
 
+results = []
+for i in range(61):
+    yval = energiesToDensity(energy_range,
+                              data_GW[i,:] + energyShift,
+                              sigma=0.2,
+                              resolution=100)
+    results.append(yval)
 
-def visualizeNumExp(ax,
-                    basename: str,
-                    shift: float,
-                    addBar: bool = False,
-                    sigma: float = 0.05,
-                    Ef: float = None) -> None:
-    """ Visualize the data from the numerical experiments as a imshow graphic.
+results = np.array(results).transpose()
 
-    This function is not general, it assumes a K-path of 59 steps.
-    """
-    fileList = []
-    for i in range(0, 59):
-        fileList.append(f"../../NumericalExperiments/{basename}/res_{i}.dat")
-    results = processDFT(fileList,
-                         energy_range,
-                         shift=energyShift + shift,
-                         resolution=400,
-                         sigma=sigma)
-
-    c = ax.imshow(-np.power(results, 1),
-                  cmap="viridis",
-                  extent=[0, 1, energy_range[0], energy_range[1]],
-                  aspect="auto",
-                  interpolation="bilinear",
-                  origin="lower")
-    ax.set_ylim(energy_range)
-    ax.set_title(f"{basename}, shift {energyShift+shift}eV")
-    ax.set_xticks(tick_loc)
-    ax.set_xticklabels(['R', 'G', 'V'])
-    if addBar:
-        fig.colorbar(c, ax=ax)
-    if not Ef is None:
-        ax.axhline(Ef + energyShift + shift, color='red', lw='2')
-
-visualizeNumExp(ax[2], "pent_bulk", 0.0, addBar=False, sigma=0.2)
+c = ax[2].imshow(-np.power(results,1),
+              cmap="viridis",
+              extent=[0, 1, energy_range[0], energy_range[1]],
+              aspect="auto",
+              interpolation="bilinear",
+              origin="lower")
+ax[2].set_ylabel("Energy (eV)")
+ax[2].set_title("GW")
 
 # %%
