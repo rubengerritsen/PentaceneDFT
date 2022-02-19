@@ -71,6 +71,7 @@ In that folder you will find a script `run_parallel` does the GW calculation on 
 
 #### 2.c Interpolating the bands
 Finally we interpolate the bands with `ypp`, this is a terrible tool that can only interpolate so many bands at a time. To interpolate all the bands I have a python script (very poorly written, but functioning) `GW/Scripts/interpolateBands.py`. On the server it is called `interpolateBands.py` as well. 
+Uncomment the line `GfnQPdb= "E < ./run_all_kpoints/ndb.QP"` if you want to interpolate the uncorrected DFT bands.
 
 After running that all the bands are in `bands.out` and we can post process them to make "heat map" images. 
 
