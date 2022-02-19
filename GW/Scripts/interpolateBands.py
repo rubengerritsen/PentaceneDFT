@@ -57,6 +57,7 @@ cooIn= "rlu"                     # Points coordinates (in) cc/rlu/iku/alat
 cooOut= "rlu"                    # Points coordinates (out) cc/rlu/iku/alat
 CIRCUIT_E_DB_path= "none"        # SAVE obtained from the QE `bands` run (alternative to %BANDS_kpts)
 BANDS_path= ""                   # High-Symmetry points labels (G,M,K,L...) also using composed positions (0.5xY+0.5xL).
+GfnQPdb= "E < ./run_all_kpoints/ndb.QP" # read the precalculated QP corrections
 BANDS_steps=30
 % BANDS_bands
 """)
