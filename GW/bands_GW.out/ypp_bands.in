@@ -1,0 +1,33 @@
+#                                                                     
+# :   :::   :::     ::::    ::::  :::::::::   ::::::::                
+# :+:   :+: :+: :+:   +:+:+: :+:+:+ :+:    :+: :+:    :+              
+#  +:+ +:+ +:+   +:+  +:+ +:+:+ +:+ +:+    +:+ +:+    +:+             
+#   +#++: +#++:++#++: +#+  +:+  +#+ +#++:++#+  +#+    +:+             
+#    +#+  +#+     +#+ +#+       +#+ +#+    +#+ +#+    +#+             
+#    #+#  #+#     #+# #+#       #+# #+#    #+# #+#    #+#             
+#    ###  ###     ### ###       ### #########   ########              
+#                                                                     
+#                                                                     
+#       Version 5.0.4 Revision 19595 Hash 896bffc02                   
+#                        Branch is                                    
+#                    MPI+HDF5_IO Build                                
+#                http://www.yambo-code.org                            
+#
+electrons                        # [R] Electronic properties
+bnds                             # [R] Bands
+INTERP_mode= "BOLTZ"                # Interpolation mode (NN=nearest point, BOLTZ=boltztrap aproach)
+INTERP_Shell_Fac= 20.00000       # The bigger it is a higher number of shells is used
+cooIn= "rlu"                     # Points coordinates (in) cc/rlu/iku/alat
+cooOut= "rlu"                    # Points coordinates (out) cc/rlu/iku/alat
+CIRCUIT_E_DB_path= "none"        # SAVE obtained from the QE `bands` run (alternative to %BANDS_kpts)
+BANDS_path= ""                   # High-Symmetry points labels (G,M,K,L...) also using composed positions (0.5xY+0.5xL).
+BANDS_steps=30
+GfnQPdb= "E < ./run_all_kpoints/ndb.QP"
+% BANDS_bands
+261 | 275 |
+%
+%BANDS_kpts 
+     0.49243 |     0.47576 |    -0.29114|
+         0.0 |         0.0 |        -0.5|
+    -0.49113 |     0.47358 |    -0.41799|
+%
